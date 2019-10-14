@@ -62,6 +62,107 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
+  - job: BuildDacpac
+    pool:
+      name: Hosted Windows 2019 with VS2019
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        projects: '**/*.csproj'
+        arguments: '--configuration $(BuildConfiguration)'
+
+    - task: VSBuild@1
+      displayName: 'Build the database project'
+      inputs:
+        project: Tailspin.SpaceGame.Database/Tailspin.SpaceGame.Database.sqlproj
+
+    - task: CopyFiles@2
+      displayName: 'Copy dacpac file to staging directory'
+      inputs:
+        contents: |
+          Tailspin.SpaceGame.Database/bin/**/*.dacpac
+        targetFolder: '$(Build.StagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: dropDacpac
+      condition: succeededOrFailed()
+
+- stage: DBAVerificationScript
+  dependsOn: Build
+  jobs:
+  - deployment: DBAVerificationScript
+    displayName: 'Script database schema changes'
+    pool:
+      name: Hosted Windows 2019 with VS2019
+    variables:
+    - group: 'Release'
+      steps:
+      - download: current
+        artifact: dropDacpac
+        patterns: '**/*'
+
+      - task: SqlAzureDacpacDeployment@1
+        displayName: Generate schema change script
+        inputs:
+          azureSubscription: 'Resource Manager - Tailspin - SpaceGame'
+          authenticationType: 'server'
+          serverName: '$(servername).database.windows.net'
+          databaseName: '$(databasename)'
+          sqlUsername: '$(adminlogin)'
+          sqlPassword: '$(adminPassword)'
+          deployType: 'DacpacTask'
+          deploymentAction: 'Script'
+          dacpacFile: '$(Pipeline.Workspace)/dropDacpac/Tailspin.SpaceGame.Database/bin/$(buildConfiguration)/Tailspin.SpaceGame.Database.dacpac'
+          ipDetectionMethod: 'AutoDetect'
+      
+      - task: PowerShell@2
+        displayName: Show Auto Generated SQL Script
+        inputs:
+          targetType: 'inline'
+          script: | 
+            Write-Host "Auto Generated SQL Update Script:"
+            Get-Content d:\a\1\s\GeneratedOutputFiles\$(databasename)_Script.sql | foreach {Write-Output $_}
+
+- stage: DBAVerificationApply
+  jobs:
+  - deployment: DBAVerificationApply
+    displayName: 'Apply database schema changes'
+    pool:
+      name: Hosted Windows 2019 with VS2019
+    variables:
+    - group: 'Release'
+    environment: 'dbaverification'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: dropDacpac
+            patterns: '**/*'
+          - task: SqlAzureDacpacDeployment@1
+            displayName: 'Deploy SQL schema'
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - SpaceGame'
+              authenticationType: 'server'
+              serverName: '$(servername).database.windows.net'
+              databaseName: '$(databasename)'
+              sqlUsername: '$(adminlogin)'
+              sqlPassword: '$(adminPassword)'
+              deployType: 'DacpacTask'
+              deploymentAction: 'Publish'
+              dacpacFile: '$(Pipeline.Workspace)/dropDacpac/Tailspin.SpaceGame.Database/bin/$(buildConfiguration)/Tailspin.SpaceGame.Database.dacpac'
+              ipDetectionMethod: 'AutoDetect'
+
 - stage: 'Dev'
   displayName: 'Deploy to the dev environment'
   dependsOn: Build

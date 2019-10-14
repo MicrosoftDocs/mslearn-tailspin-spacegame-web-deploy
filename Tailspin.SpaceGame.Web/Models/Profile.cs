@@ -12,6 +12,10 @@ namespace TailSpin.SpaceGame.Web.Models
         [JsonProperty(PropertyName = "avatarUrl")]
         public string AvatarUrl { get; set; }
 
+        // The player's favorite map.
+        [JsonProperty(PropertyName = "favoriteMap")]
+        public string FavoriteMap { get; set; }
+
         // The achievements the player earned.
         [JsonProperty(PropertyName = "achievements")]
         public string[] Achievements { get; set; }
