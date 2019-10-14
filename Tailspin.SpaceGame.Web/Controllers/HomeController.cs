@@ -7,22 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TailSpin.SpaceGame.Web.Models;
 
+
 namespace TailSpin.SpaceGame.Web.Controllers
 {
     public class HomeController : Controller
     {
-        // High score repository.
-        private readonly IDocumentDBRepository<Score> _scoreRepository;
-        // User profile repository.
-        private readonly IDocumentDBRepository<Profile> _profileRespository;
-
-        public HomeController(
-            IDocumentDBRepository<Score> scoreRepository,
-            IDocumentDBRepository<Profile> profileRespository
-            )
+        private readonly IDocumentDBRepository _dbRespository;
+        public HomeController(IDocumentDBRepository dbRepository)
         {
-            _scoreRepository = scoreRepository;
-            _profileRespository = profileRespository;
+            _dbRespository = dbRepository;
         }
 
         public async Task<IActionResult> Index(
@@ -59,44 +52,21 @@ namespace TailSpin.SpaceGame.Web.Controllers
 
             try
             {
-                // Form the query predicate.
-                // This expression selects all scores that match the provided game 
-                // mode and region (map).
-                // Select the score if the game mode or region is empty.
-                Expression<Func<Score, bool>> queryPredicate = score =>
-                    (string.IsNullOrEmpty(mode) || score.GameMode == mode) &&
-                    (string.IsNullOrEmpty(region) || score.GameRegion == region);
-
                 // Fetch the total number of results in the background.
-                var countItemsTask = _scoreRepository.CountItemsAsync(queryPredicate);
+                var countItemsTask = _dbRespository.CountScoresAsync(mode, region);
 
                 // Fetch the scores that match the current filter.
-                IEnumerable<Score> scores = await _scoreRepository.GetItemsAsync(
-                    queryPredicate, // the predicate defined above
-                    score => score.HighScore, // sort descending by high score
-                    page - 1, // subtract 1 to make the query 0-based
-                    pageSize
-                  );
+                IEnumerable<Score> scores = await _dbRespository.GetScoresAsync(mode, region, page, pageSize);
 
                 // Wait for the total count.
                 vm.TotalResults = await countItemsTask;
-
-                // Set previous and next hyperlinks.
-                if (page > 1)
-                {
-                    vm.PrevLink = $"/?page={page - 1}&pageSize={pageSize}&mode={mode}&region={region}#leaderboard";
-                }
-                if (vm.TotalResults > page * pageSize)
-                {
-                    vm.NextLink = $"/?page={page + 1}&pageSize={pageSize}&mode={mode}&region={region}#leaderboard";
-                }
 
                 // Fetch the user profile for each score.
                 // This creates a list that's parallel with the scores collection.
                 var profiles = new List<Task<Profile>>();
                 foreach (var score in scores)
                 {
-                    profiles.Add(_profileRespository.GetItemAsync(score.ProfileId));
+                    profiles.Add(_dbRespository.GetProfileAsync(score.ProfileId));
                 }
                 Task<Profile>.WaitAll(profiles.ToArray());
 
@@ -117,7 +87,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
             try
             {
                 // Fetch the user profile with the given identifier.
-                return View(new ProfileViewModel { Profile = await _profileRespository.GetItemAsync(id), Rank = rank });
+                return View(new ProfileViewModel { Profile = await _dbRespository.GetProfileAsync(id), Rank = rank });
             }
             catch (Exception ex)
             {

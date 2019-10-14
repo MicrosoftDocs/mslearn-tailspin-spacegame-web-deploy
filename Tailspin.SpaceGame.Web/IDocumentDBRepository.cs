@@ -6,7 +6,7 @@ using TailSpin.SpaceGame.Web.Models;
 
 namespace TailSpin.SpaceGame.Web
 {
-    public interface IDocumentDBRepository<T> where T : Model
+    public interface IDocumentDBRepository
     {
         /// <summary>
         /// Retrieves the item from the store with the given identifier.
@@ -16,7 +16,7 @@ namespace TailSpin.SpaceGame.Web
         /// The task result contains the retrieved item.
         /// </returns>
         /// <param name="id">The identifier of the item to retrieve.</param>
-        Task<T> GetItemAsync(string id);
+        Task<Profile> GetProfileAsync(string profileId);
 
         /// <summary>
         /// Retrieves items from the store that match the given query predicate.
@@ -30,12 +30,8 @@ namespace TailSpin.SpaceGame.Web
         /// <param name="orderDescendingPredicate">Predicate that specifies how to sort the results in descending order.</param>
         /// <param name="page">The 1-based page of results to return.</param>
         /// <param name="pageSize">The number of items on a page.</param>
-        Task<IEnumerable<T>> GetItemsAsync(
-            Expression<Func<T, bool>> queryPredicate,
-            Expression<Func<T, int>> orderDescendingPredicate,
-            int page = 1,
-            int pageSize = 10
-        );
+        Task<IEnumerable<Score>> GetScoresAsync(
+            string mode, string region, int page = 1, int pageSize = 10);
 
         /// <summary>
         /// Retrieves the number of items that match the given query predicate.
@@ -45,6 +41,6 @@ namespace TailSpin.SpaceGame.Web
         /// The task result contains the number of items that match the query predicate.
         /// </returns>
         /// <param name="queryPredicate">Predicate that specifies which items to select.</param>
-        Task<int> CountItemsAsync(Expression<Func<T, bool>> queryPredicate);
+        Task<int> CountScoresAsync(string mode, string region);
     }
 }

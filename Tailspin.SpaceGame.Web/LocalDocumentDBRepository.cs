@@ -9,15 +9,17 @@ using TailSpin.SpaceGame.Web.Models;
 
 namespace TailSpin.SpaceGame.Web
 {
-    public class LocalDocumentDBRepository<T> : IDocumentDBRepository<T> where T : Model
+    public class LocalDocumentDBRepository : IDocumentDBRepository
     {
         // An in-memory list of all items in the collection.
-        private readonly List<T> _items;
+        private readonly List<Score> _scores;
+        private readonly List<Profile> _profiles;
 
-        public LocalDocumentDBRepository(string fileName)
+        public LocalDocumentDBRepository(string scoresFileName, string profilesFileName)
         {
             // Serialize the items from the provided JSON document.
-            _items = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(fileName));
+            _scores = JsonConvert.DeserializeObject<List<Score>>(File.ReadAllText(scoresFileName));
+            _profiles = JsonConvert.DeserializeObject<List<Profile>>(File.ReadAllText(profilesFileName));
         }
 
         /// <summary>
@@ -28,9 +30,9 @@ namespace TailSpin.SpaceGame.Web
         /// The task result contains the retrieved item.
         /// </returns>
         /// <param name="id">The identifier of the item to retrieve.</param>
-        public Task<T> GetItemAsync(string id)
+        public Task<Profile> GetProfileAsync(string profileId)
         {
-            return Task<T>.FromResult(_items.Single(item => item.Id == id));
+            return Task<Profile>.FromResult(_profiles.Single(profile => profile.Id == profileId));
         }
 
         /// <summary>
@@ -45,20 +47,24 @@ namespace TailSpin.SpaceGame.Web
         /// <param name="orderDescendingPredicate">Predicate that specifies how to sort the results in descending order.</param>
         /// <param name="page">The 1-based page of results to return.</param>
         /// <param name="pageSize">The number of items on a page.</param>
-        public Task<IEnumerable<T>> GetItemsAsync(
-            Expression<Func<T, bool>> queryPredicate,
-            Expression<Func<T, int>> orderDescendingPredicate,
+        public Task<IEnumerable<Score>> GetScoresAsync(
+            string mode,
+            string region,
             int page = 1, int pageSize = 10
         )
         {
-            var result = _items.AsQueryable()
-                .Where(queryPredicate) // filter
-                .OrderByDescending(orderDescendingPredicate) // sort
-                .Skip(page * pageSize) // find page
-                .Take(pageSize) // take items
-                .AsEnumerable(); // make enumeratable
+            Expression<Func<Score, bool>> queryPredicate = score =>
+                            (string.IsNullOrEmpty(mode) || score.GameMode == mode) &&
+                            (string.IsNullOrEmpty(region) || score.GameRegion == region);
 
-            return Task<IEnumerable<T>>.FromResult(result);
+            var result = _scores.AsQueryable()
+                .Where(queryPredicate) // filter
+                .OrderByDescending(score => score.HighScore) // sort
+                .Skip((page - 1) * pageSize) // find page
+                .Take(pageSize) // take items
+                .AsEnumerable(); // make enumerable
+
+            return Task<IEnumerable<Score>>.FromResult(result);
         }
 
         /// <summary>
@@ -69,9 +75,13 @@ namespace TailSpin.SpaceGame.Web
         /// The task result contains the number of items that match the query predicate.
         /// </returns>
         /// <param name="queryPredicate">Predicate that specifies which items to select.</param>
-        public Task<int> CountItemsAsync(Expression<Func<T, bool>> queryPredicate)
+        public Task<int> CountScoresAsync(string mode, string region)
         {
-            var count = _items.AsQueryable()
+            Expression<Func<Score, bool>> queryPredicate = score =>
+                (string.IsNullOrEmpty(mode) || score.GameMode == mode) &&
+                (string.IsNullOrEmpty(region) || score.GameRegion == region);
+
+            var count = _scores.AsQueryable()
                 .Where(queryPredicate) // filter
                 .Count(); // count
 
