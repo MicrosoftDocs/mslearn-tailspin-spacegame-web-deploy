@@ -1,6 +1,7 @@
 
 variables:
   buildConfiguration: 'Release'
+  artifactDrop: 'drop'
 
 stages:
 - stage: 'Build'
@@ -62,4 +63,27 @@ stages:
         zipAfterPublish: true
 
     - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: drop
+      artifact: $(artifactDrop)
+
+- stage: 'Deploy'
+  displayName: 'Deploy the web application'
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'latest'
+    environment: dev
+    variables:
+    - group: Release
+    strategy:
+     runOnce:
+       deploy:
+         steps:
+         - download: current
+           artifact: $(artifactDrop)
+         - task: AzureWebApp@1
+           displayName: 'Azure App Service Deploy: website'
+           inputs:
+            azureSubscription: 'Resource Manager - Tailspin - Space '
+            appName: '$(WebAppName)'
+            package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
