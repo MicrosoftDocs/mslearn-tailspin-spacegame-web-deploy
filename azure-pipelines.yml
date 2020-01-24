@@ -119,7 +119,7 @@ stages:
     variables:
     - group: 'Release'
     steps: 
-    - task: DotNetCoreInstaller@0
+    - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
         version: '$(dotnetSdkVersion)'
