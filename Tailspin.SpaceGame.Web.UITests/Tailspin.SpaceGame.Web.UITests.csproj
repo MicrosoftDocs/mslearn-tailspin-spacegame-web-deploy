@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PublishChromeDriver>True</PublishChromeDriver>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -12,10 +12,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="76.0.3809.12600" />
-    <PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.24.0" />
-    <PackageReference Include="Selenium.WebDriver.IEDriver" Version="3.8.0.0" />
-    <PackageReference Include="WebDriverManager" Version="2.6.0" />
+    <PackageReference Include="Selenium.Chrome.WebDriver" Version="79.0.0" />
+    <PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.26.0" />
+    <PackageReference Include="Selenium.WebDriver.IEDriver" Version="3.150.1" />
+    <PackageReference Include="WebDriverManager" Version="2.9.0" />
   </ItemGroup>
 
 </Project>

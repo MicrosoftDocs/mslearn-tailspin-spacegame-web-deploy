@@ -82,18 +82,12 @@ namespace UITests
         }
 
         // Download game
-        [TestCase(
-            "/html/body/div/div/section[2]/div[2]/a",
-            "//*[@id=\"pretend-modal\"]/div/div")]
+        [TestCase("download-btn", "pretend-modal")]
         // Screen image
-        [TestCase(
-            "/html/body/div/div/section[3]/div/ul/li[1]/a",
-            "/html/body/div[1]/div/div[2]")]
-        // Top player on the leaderboard
-        [TestCase(
-            "/html/body/div/div/section[4]/div/div/div[1]/div[2]/div[2]/div/a/div",
-            "//*[@id=\"profile-modal-1\"]/div/div")]
-        public void ClickLinkByXPath_ShouldDisplayModalByXPath(string linkXPath, string modalXPath)
+        [TestCase("screen-01", "screen-modal")]
+        // // Top player on the leaderboard
+        [TestCase("profile-1", "profile-modal-1")]
+        public void ClickLinkById_ShouldDisplayModalById(string linkId, string modalId)
         {
             // Skip the test if the driver could not be loaded.
             // This happens when the underlying browser is not installed.
@@ -103,11 +97,11 @@ namespace UITests
                 return;
             }
 
-            // Locate the link by its XPath and then click the link.
-            ClickElement(FindElement(By.XPath(linkXPath)));
+            // Locate the link by its ID and then click the link.
+            ClickElement(FindElement(By.Id(linkId)));
 
             // Locate the resulting modal.
-            IWebElement modal = FindElement(By.XPath(modalXPath));
+            IWebElement modal = FindElement(By.Id(modalId));
 
             // Record whether the modal was successfully displayed.
             bool modalWasDisplayed = (modal != null && modal.Displayed);
