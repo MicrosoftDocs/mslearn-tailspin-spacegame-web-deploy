@@ -47,7 +47,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                     "Trio"
                 },
 
-                    GameRegions = new List<string>()
+                GameRegions = new List<string>()
                 {
                     "Milky Way",
                     "Andromeda",
@@ -105,7 +105,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
 
                 return View(vm);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(vm);
             }
@@ -119,7 +119,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Fetch the user profile with the given identifier.
                 return View(new ProfileViewModel { Profile = await _profileRespository.GetItemAsync(id), Rank = rank });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return RedirectToAction("/");
             }
