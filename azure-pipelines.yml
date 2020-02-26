@@ -171,4 +171,4 @@ stages:
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
               appName: '$(WebAppName)'
-              package: '$(Pipeline.Workspace)/a/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+              package: '$(Pipeline.Workspace)/a/drop/Release/Tailspin.SpaceGame.Web.zip'
