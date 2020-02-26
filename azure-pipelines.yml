@@ -1,10 +1,16 @@
 trigger:
 - '*'
 
-pool:
-  vmImage: 'ubuntu-16.04'
-  demands:
-    - npm
+stages:
+- stage: 'Build'
+  displayName: 'Build the web application'
+  jobs: 
+  - job: 'Build'
+    displayName: 'Build job'
+    pool:
+      vmImage: 'ubuntu-16.04'
+      demands:
+        - npm
 
 variables:
   buildConfiguration: 'Release'
@@ -16,6 +22,11 @@ steps:
   displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
   inputs:
     version: '$(dotnetSdkVersion)'
+
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 2.1.505 for SonarCloud'
+  inputs:
+    version: '2.1.505'
 
 - task: Npm@1
   displayName: 'Run npm install'
@@ -38,12 +49,88 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
+# - task: SonarCloudPrepare@1
+#   displayName: 'Prepare SonarCloud analysis'
+#   inputs:
+#     SonarCloud: 'SonarCloud connection 1'
+#     organization: '$(SonarOrganization)'
+#     projectKey: '$(SonarProjectKey)'
+#     projectName: '$(SonarProjectName)'
+#     projectVersion: '$(Build.BuildNumber)'
+#     extraProperties: |
+#      sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/TestResults/Coverage/coverage.opencover.xml
+#      sonar.exclusions=**/wwwroot/lib/**/*
+#   condition: |
+#     and
+#     (
+#       succeeded(),
+#       eq(variables['Build.Reason'], 'PullRequest'),
+#       eq(variables['System.PullRequest.TargetBranch'], 'master')
+#     )
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack the project - $(buildConfiguration)'
+  inputs:
+    command: 'pack'
+    projects: '**/*.csproj'
+    arguments: '--no-build --configuration $(buildConfiguration)'
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '1'
+    minorVersion: '0'
+    patchVersion: '0'
+
+- task: DotNetCoreCLI@2
+
+  displayName: 'Install ReportGenerator'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'install --global dotnet-reportgenerator-globaltool'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests - $(buildConfiguration)'
+  inputs:
+    command: 'test'
+    arguments: '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura%2copencover" /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
+
+- script: |
+    reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+  displayName: 'Create code coverage report'
+
+# - task: SonarCloudAnalyze@1
+#   displayName: 'Run SonarCloud code analysis'
+#   condition: |
+#     and
+#     (
+#       succeeded(),
+#       eq(variables['Build.Reason'], 'PullRequest'),
+#       eq(variables['System.PullRequest.TargetBranch'], 'master')
+#     )
+ 
+# - task: SonarCloudPublish@1
+#   displayName: 'Publish SonarCloud quality gate results'
+#   condition: |
+#     and
+#     (
+#       succeeded(),
+#       eq(variables['Build.Reason'], 'PullRequest'),
+#       eq(variables['System.PullRequest.TargetBranch'], 'master')
+#     )
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage report'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
@@ -54,5 +141,36 @@ steps:
     arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
     zipAfterPublish: true
 
-- publish: '$(Build.ArtifactStagingDirectory)'
-  artifact: drop
+- task: WhiteSource Bolt@20
+  displayName: 'Run WhiteSource Bolt'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  condition: succeeded()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  condition: succeeded()
+
+- stage: 'Deploy'
+  displayName: 'Deploy the web application'
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-16.04'
+    environment: dev
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              appName: '$(WebAppName)'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
