@@ -23,10 +23,10 @@ stages:
       inputs:
         version: '$(dotnetSdkVersion)'
 
-    - task: UseDotNet@2
-      displayName: 'Use .NET Core SDK 2.1.505 for SonarCloud'
-      inputs:
-        version: '2.1.505'
+    # - task: UseDotNet@2
+    #   displayName: 'Use .NET Core SDK 2.1.505 for SonarCloud'
+    #   inputs:
+    #     version: '2.1.505'
 
     - task: Npm@1
       displayName: 'Run npm install'
@@ -101,28 +101,28 @@ stages:
         publishTestResults: true
         projects: '**/*.Tests.csproj'
 
-    - script: |
-        reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
-      displayName: 'Create code coverage report'
-    - task: SonarCloudAnalyze@1
-      displayName: 'Run SonarCloud code analysis'
-      condition: |
-        and
-        (
-          succeeded(),
-          eq(variables['Build.Reason'], 'PullRequest'),
-          eq(variables['System.PullRequest.TargetBranch'], 'master')
-        )
+    # - script: |
+    #     reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+    #   displayName: 'Create code coverage report'
+    # - task: SonarCloudAnalyze@1
+    #   displayName: 'Run SonarCloud code analysis'
+    #   condition: |
+    #     and
+    #     (
+    #       succeeded(),
+    #       eq(variables['Build.Reason'], 'PullRequest'),
+    #       eq(variables['System.PullRequest.TargetBranch'], 'master')
+    #     )
     
-    - task: SonarCloudPublish@1
-      displayName: 'Publish SonarCloud quality gate results'
-      condition: |
-        and
-        (
-          succeeded(),
-          eq(variables['Build.Reason'], 'PullRequest'),
-          eq(variables['System.PullRequest.TargetBranch'], 'master')
-        )
+    # - task: SonarCloudPublish@1
+    #   displayName: 'Publish SonarCloud quality gate results'
+    #   condition: |
+    #     and
+    #     (
+    #       succeeded(),
+    #       eq(variables['Build.Reason'], 'PullRequest'),
+    #       eq(variables['System.PullRequest.TargetBranch'], 'master')
+    #     )
 
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish code coverage report'
