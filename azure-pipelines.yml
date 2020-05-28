@@ -8,9 +8,9 @@ pool:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3.1.100'
+  displayName: 'Use .NET Core SDK 3.1.0'
   inputs:
-    version: 3.1.100
+    version: 3.1.0
 
 - task: Npm@1
   displayName: 'Run npm install'
