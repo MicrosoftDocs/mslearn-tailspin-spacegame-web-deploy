@@ -1,8 +1,8 @@
+using Microsoft.Edge.SeleniumTools;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections;
@@ -11,7 +11,7 @@ namespace UITests
 {
     [TestFixture("Chrome")]
     [TestFixture("Firefox")]
-    [TestFixture("IE")]
+    [TestFixture("Edge")]
     public class HomePageTest
     {
         private string browser;
@@ -27,22 +27,27 @@ namespace UITests
         {
             try
             {
-                // The NuGet package for each browser installs driver software
-                // under the bin directory, alongside the compiled test code.
-                // This tells the driver class where to find the underlying driver software.
-                var cwd = Environment.CurrentDirectory;
-
                 // Create the driver for the current browser.
                 switch(browser)
                 {
                   case "Chrome":
-                    driver = new ChromeDriver(cwd);
+                    driver = new ChromeDriver(
+                        Environment.GetEnvironmentVariable("ChromeWebDriver")
+                    );
                     break;
                   case "Firefox":
-                    driver = new FirefoxDriver(cwd);
+                    driver = new FirefoxDriver(
+                        Environment.GetEnvironmentVariable("GeckoWebDriver")
+                    );
                     break;
-                  case "IE":
-                    driver = new InternetExplorerDriver(cwd);
+                  case "Edge":
+                    driver = new EdgeDriver(
+                        Environment.GetEnvironmentVariable("EdgeWebDriver"),
+                        new EdgeOptions
+                        {
+                            UseChromium = true
+                        }
+                    );
                     break;
                   default:
                     throw new ArgumentException($"'{browser}': Unknown browser");
@@ -65,9 +70,11 @@ namespace UITests
             }
             catch (DriverServiceNotFoundException)
             {
+                Console.WriteLine("DriverServiceNotFoundException");
             }
             catch (WebDriverException)
             {
+                Console.WriteLine("WebDriverException");
                 Cleanup();
             }
         }
