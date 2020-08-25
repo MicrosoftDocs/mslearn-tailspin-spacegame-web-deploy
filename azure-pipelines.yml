@@ -99,7 +99,7 @@ stages:
               startUpCommand: 'func azure functionapp publish $(functionAppName) --no-bundler'
           
           - task: AzureAppServiceSettings@1
-            displayName: 'Update web app settings!'
+            displayName: 'Update web app settings'
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
               appName: $(WebAppName)
