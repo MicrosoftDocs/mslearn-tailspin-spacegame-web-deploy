@@ -81,7 +81,7 @@ stages:
       vmImage: 'ubuntu-18.04'
     environment: dev
     variables:
-    - group: Release
+    - group: galin-test-var-group
     strategy:
       runOnce:
         deploy:
