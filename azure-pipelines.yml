@@ -140,5 +140,5 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'galin-test-service-connection'
-              appName: '$(galin-test)'
+              appName: '$(galin-staging)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
