@@ -29,6 +29,7 @@ gulp.task("min:js", () => {
     .pipe(gulp.dest("."));
 });
 
+
 gulp.task("min:css", () => {
   return gulp.src([paths.css, "!" + paths.minCss])
     .pipe(concat(paths.concatCssDest))
