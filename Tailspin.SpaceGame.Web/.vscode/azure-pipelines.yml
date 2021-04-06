@@ -94,3 +94,26 @@ stages:
                 azureSubscription: 'Space-Game-RG'
                 appName: '$(WebAppNameDev)'
                 package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+  - stage: 'Test'
+    displayName: 'Deploy to the test environment'
+    dependsOn: Dev
+    #condition: eq(variables['Build.Reason'], 'Schedule')
+    jobs:
+    - deployment: Deploy
+      pool:
+        vmImage: 'ubuntu-18.04'
+      environment: test
+      variables:
+      - group: 'Release'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - download: current
+              artifact: drop
+            - task: AzureWebApp@1
+              displayName: 'Azure App Service Deploy: website'
+              inputs:
+                azureSubscription: 'Space-Game-RG'
+                appName: '$(WebAppNameTest)'
+                package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
