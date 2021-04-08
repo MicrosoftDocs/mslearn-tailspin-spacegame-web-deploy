@@ -46,6 +46,7 @@ stages:
     
     - task: WhiteSource Bolt@20
       inputs:
+        cwd: '$(System.WorkingDirectory)'
 
     - task: gulp@1
       displayName: 'Run gulp tasks'
