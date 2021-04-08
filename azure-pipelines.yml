@@ -42,6 +42,10 @@ stages:
 
     - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
       displayName: 'Compile Sass assets'
+      
+    
+    - task: WhiteSource Bolt@20
+      inputs:
 
     - task: gulp@1
       displayName: 'Run gulp tasks'
