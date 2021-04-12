@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: MVCLocal
+  vmImage: ubuntu-latest
 
 variables:
   buildConfiguration: 'Release'
