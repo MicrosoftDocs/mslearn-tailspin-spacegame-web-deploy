@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  name: Default
+  name: MVCLocalPool
   demands:
   - agent.name -equals MvsAgent01
 
