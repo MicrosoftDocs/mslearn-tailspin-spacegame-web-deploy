@@ -7,7 +7,10 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  name: Default
+  demands:
+  - MVCLocalPool
+  vmImage: windows-latest
 
 variables:
   buildConfiguration: 'Release'
