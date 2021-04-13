@@ -9,7 +9,7 @@ trigger:
 pool:
   name: Default
   demands:
-  - MVCLocalPool
+  - agent.name -equals MVCLocalPool
   vmImage: windows-latest
 
 variables:
