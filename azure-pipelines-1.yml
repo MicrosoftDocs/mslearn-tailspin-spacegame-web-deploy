@@ -10,7 +10,6 @@ pool:
   name: Default
   demands:
   - agent.name -equals MVCLocalPool
-  vmImage: windows-latest
 
 variables:
   buildConfiguration: 'Release'
