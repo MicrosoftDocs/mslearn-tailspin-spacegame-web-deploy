@@ -9,7 +9,7 @@ trigger:
 pool:
   name: Default
   demands:
-  - agent.name -equals MVCLocalPool
+  - agent.name -equals MvsAgent01
 
 variables:
   buildConfiguration: 'Release'
