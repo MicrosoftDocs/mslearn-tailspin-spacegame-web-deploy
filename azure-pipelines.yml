@@ -42,7 +42,7 @@ steps:
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
-    arguments: '--no-restore --configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration)'
     projects: '**/*.csproj'
 
 - task: DotNetCoreCLI@2
