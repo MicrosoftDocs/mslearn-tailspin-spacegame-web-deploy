@@ -28,7 +28,8 @@ namespace TailSpin.SpaceGame.Web
             });
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddPages(); 
+            //services.AddPages(); 
+            services.AddRazorPages(); 
             MvcOptions mvcOptions = new MvcOptions(); 
             mvcOptions.EnableEndpointRouting = true; 
 
@@ -44,14 +45,17 @@ namespace TailSpin.SpaceGame.Web
             
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); 
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRouting(); 
             app.UseEndpoints(endpoints => 
             {
                 endpoints.MapRazorPages(); 
+                
             });
+
+            
 
             app.Run(async context =>
             {
