@@ -29,6 +29,8 @@ namespace TailSpin.SpaceGame.Web
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.AddPages(); 
+            // services.AddControllers();
+            services.AddControllersWithViews();
             services.AddRazorPages(); 
             MvcOptions mvcOptions = new MvcOptions(); 
             mvcOptions.EnableEndpointRouting = true; 
@@ -48,19 +50,20 @@ namespace TailSpin.SpaceGame.Web
             app.UseHttpsRedirection(); 
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseRouting(); 
-            app.UseEndpoints(endpoints => 
+            app.UseRouting();
+            IApplicationBuilder applicationBuilder = app.UseEndpoints(endpoints => 
             {
                 endpoints.MapRazorPages(); 
+                endpoints.MapControllers(); 
+                endpoints.MapControllerRoute( name: "default", pattern: "{controller=Home}/{action=Index}");
+                //endpoints.MapControllerRoute(name: "Privacy", pattern: "{controller=Home}/{action=Privacy}"); 
                 
             });
 
-            
-
-            app.Run(async context =>
-            {
-            await context.Response.WriteAsync("Hello from 2nd delegate.");
-            });
+            //app.Run(async context =>
+            //{
+            //await context.Response.WriteAsync("Hello from 2nd delegate.");
+            // });
 
         }
     }
