@@ -55,15 +55,8 @@ namespace TailSpin.SpaceGame.Web
             {
                 endpoints.MapRazorPages(); 
                 endpoints.MapControllers(); 
-                endpoints.MapControllerRoute( name: "default", pattern: "{controller=Home}/{action=Index}");
-                //endpoints.MapControllerRoute(name: "Privacy", pattern: "{controller=Home}/{action=Privacy}"); 
-                
+                endpoints.MapDefaultControllerRoute(); 
             });
-
-            //app.Run(async context =>
-            //{
-            //await context.Response.WriteAsync("Hello from 2nd delegate.");
-            // });
 
         }
     }
