@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TailSpin.SpaceGame.Web.Models;
 
+
+using Microsoft.Extensions.Hosting;
+
 namespace TailSpin.SpaceGame.Web
 {
     public class Startup
@@ -44,9 +47,16 @@ namespace TailSpin.SpaceGame.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             
-            
-            app.UseExceptionHandler("/Home/Error");
-            app.UseHsts();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
             app.UseHttpsRedirection(); 
             app.UseStaticFiles();
             app.UseCookiePolicy();
