@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TailSpin.SpaceGame.Web.Models;
 
+
+using Microsoft.Extensions.Hosting;
+
 namespace TailSpin.SpaceGame.Web
 {
     public class Startup
@@ -27,7 +30,13 @@ namespace TailSpin.SpaceGame.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddPages(); 
+            // services.AddControllers();
+            services.AddControllersWithViews();
+            services.AddRazorPages(); 
+            MvcOptions mvcOptions = new MvcOptions(); 
+            mvcOptions.EnableEndpointRouting = true; 
 
             // Add document stores. These are passed to the HomeController constructor.
             services.AddSingleton<IDocumentDBRepository<Score>>(new LocalDocumentDBRepository<Score>(@"SampleData/scores.json"));
@@ -35,8 +44,9 @@ namespace TailSpin.SpaceGame.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -47,16 +57,17 @@ namespace TailSpin.SpaceGame.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); 
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseMvc(routes =>
+            app.UseRouting();
+            IApplicationBuilder applicationBuilder = app.UseEndpoints(endpoints => 
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages(); 
+                endpoints.MapControllers(); 
+                endpoints.MapDefaultControllerRoute(); 
             });
+
         }
     }
 }
