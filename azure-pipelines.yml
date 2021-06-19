@@ -114,7 +114,7 @@ stages:
             - task: SqlAzureDacpacDeployment@1
               displayName: Generate schema change script
               inputs:
-                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                azureSubscription: 'managedb'
                 authenticationType: 'server'
                 serverName: '$(servername).database.windows.net'
                 databaseName: '$(databasename)'
@@ -152,7 +152,7 @@ stages:
             - task: SqlAzureDacpacDeployment@1
               displayName: 'Deploy SQL schema'
               inputs:
-                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                azureSubscription: 'managedb'
                 authenticationType: 'server'
                 serverName: '$(servername).database.windows.net'
                 databaseName: '$(databasename)'
@@ -182,7 +182,7 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Azure App Service Deploy: website'
               inputs:
-                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                azureSubscription: 'tailspin-space-game-rg'
                 appName: '$(WebAppNameDev)'
                 package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
   
@@ -205,7 +205,7 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Azure App Service Deploy: website'
               inputs:
-                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                azureSubscription: 'tailspin-space-game-rg'
                 appName: '$(WebAppNameTest)'
                 package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
   
@@ -228,6 +228,6 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Azure App Service Deploy: website'
               inputs:
-                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                azureSubscription: 'tailspin-space-game-rg'
                 appName: '$(WebAppNameStaging)'
                 package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
