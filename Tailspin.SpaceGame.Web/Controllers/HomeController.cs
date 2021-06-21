@@ -47,7 +47,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                     "Trio"
                 },
 
-                GameRegions = new List<string>()
+                    GameRegions = new List<string>()
                 {
                     "Milky Way",
                     "Andromeda",
