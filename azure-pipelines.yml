@@ -12,6 +12,7 @@ stages:
   - job: 'Build'
     displayName: 'Build job'
     pool:
+      name : 'Azure Pipelines'
       vmImage: 'ubuntu-20.04'
       demands:
       - npm
@@ -78,6 +79,7 @@ stages:
   jobs:
   - deployment: Deploy
     pool:
+      name : 'Azure Pipelines'
       vmImage: 'ubuntu-20.04'
     environment: dev
     variables:
