@@ -12,8 +12,8 @@ stages:
   - job: 'Build'
     displayName: 'Build job'
     pool:
-      name : 'Azure Pipelines'
-      vmImage: 'ubuntu-20.04'
+    name : 'PrivateAgentPool'
+    vmImage: 'windows-latest'
       demands:
       - npm
 
@@ -79,8 +79,8 @@ stages:
   jobs:
   - deployment: Deploy
     pool:
-      name : 'Azure Pipelines'
-      vmImage: 'ubuntu-20.04'
+     name : 'PrivateAgentPool'
+     vmImage: 'windows-latest'
     environment: dev
     variables:
     - group: Release
