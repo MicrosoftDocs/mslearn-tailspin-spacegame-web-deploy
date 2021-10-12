@@ -113,7 +113,7 @@ stages:
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
   - job: RunUITests
     dependsOn: Deploy
-    displayName: : 'Run UI Tests'
+    displayName: 'Run UI Tests'
     pool: 
       vmImage: 'windows-2019'
     variables:
