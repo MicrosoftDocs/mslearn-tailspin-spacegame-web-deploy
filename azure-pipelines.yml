@@ -25,6 +25,10 @@ stages:
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
         version: '$(dotnetSdkVersion)'
+    
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12'
 
     - task: Npm@1
       displayName: 'Run npm install'
