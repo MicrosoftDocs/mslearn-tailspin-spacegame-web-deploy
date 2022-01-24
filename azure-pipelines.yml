@@ -1,7 +1,6 @@
 trigger:
 - '*'
 
-
 variables:
   buildConfiguration: 'Release'
   dotnetSdkVersion: '5.x'
