@@ -1,4 +1,4 @@
-ttrigger:
+trigger:
 - '*'
 
 variables:
