@@ -7,7 +7,7 @@ trigger:
 #   - npm
 
 pool:
-  name: 'mydockeragent'
+  name: 'default'
   demands:
     - npm
 
