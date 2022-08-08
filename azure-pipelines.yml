@@ -20,16 +20,6 @@ stages:
       dotnetSdkVersion: '6.x'
 
     steps:
-    - task: Docker@2
-      displayName: 'Build and push the image to container registry'
-      inputs:
-        command: buildAndPush
-        buildContext: $(Build.Repository.LocalPath)
-        repository: $(webRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
-        containerRegistry: 'Container Registry Connection'
-        tags: |
-          $(tag)
     - task: UseDotNet@2
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
