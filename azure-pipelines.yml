@@ -64,6 +64,7 @@ stages:
         projects: '**/*.csproj'
     - bash: 
         echo "Build.SourceBranchName "$(Build.SourceBranchName)
+        echo "date in build server "`date`
     
     - task: DotNetCoreCLI@2
       displayName: 'Publish the project - $(buildConfiguration)'
@@ -105,6 +106,9 @@ stages:
               #azureSubscription: 'Resource Manager - Tailspin - Space Game'
               #appName: '$(WebAppNameDev)'
               #package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+          - bash: 
+#              echo "Build.SourceBranchName "$(Build.SourceBranchName)
+              echo "date of deploy server "`date`        
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
