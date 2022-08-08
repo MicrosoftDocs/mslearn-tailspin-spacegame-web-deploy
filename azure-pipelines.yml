@@ -4,9 +4,10 @@ trigger:
 variables:
   buildConfiguration: 'Release'
   releaseBranchName: 'release'
+  buildSrcBranch: 'blue-green'
 
 schedules:
-- cron: '35 13 * * *'
+- cron: '48 13 * * *'
   displayName: 'Deploy every day at 3 A.M.'
   branches:
     include:
@@ -83,7 +84,7 @@ stages:
    and
     (
       succeeded(),
-      eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
+      eq(variables['Build.SourceBranchName'], variables['buildSrcBranch'])
     )
   jobs:
   - deployment: Deploy
