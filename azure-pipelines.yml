@@ -88,8 +88,9 @@ stages:
               #appName: '$(WebAppNameDev)'
               #package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
           - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Free Trial(72475367-ba62-4d08-b673-71a79297f14c)'
+              azureSubscription: 'mslearn-tailspin-spacegame-web-deploy'
               appType: 'webAppLinux'
               appName: '$(WebAppNameDev)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
@@ -117,8 +118,9 @@ stages:
               #appName: '$(WebAppNameTest)'
               #package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
           - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Free Trial(72475367-ba62-4d08-b673-71a79297f14c)'
+              azureSubscription: 'mslearn-tailspin-spacegame-web-deploy'
               appType: 'webAppLinux'
               appName: '$(WebAppNameTest)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
@@ -146,8 +148,9 @@ stages:
               #appName: '$(WebAppNameStaging)'
               #package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
           - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Free Trial(72475367-ba62-4d08-b673-71a79297f14c)'
+              azureSubscription: 'mslearn-tailspin-spacegame-web-deploy'
               appType: 'webAppLinux'
               appName: '$(WebAppNameStaging)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
