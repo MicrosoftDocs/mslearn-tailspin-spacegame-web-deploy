@@ -61,7 +61,9 @@ stages:
         command: 'build'
         arguments: '--no-restore --configuration $(buildConfiguration)'
         projects: '**/*.csproj'
-
+    - bash: 
+        echo "variables['Build.SourceBranchName'] "$Build.SourceBranchName
+    
     - task: DotNetCoreCLI@2
       displayName: 'Publish the project - $(buildConfiguration)'
       inputs:
