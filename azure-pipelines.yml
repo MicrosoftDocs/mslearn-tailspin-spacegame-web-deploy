@@ -7,6 +7,14 @@ pool:
   - npm
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)' # Update this to match your need
+
+steps:
 # Prepare Analysis Configuration task
 - task: SonarQubePrepare@5
   inputs:
