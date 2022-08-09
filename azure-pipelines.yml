@@ -20,4 +20,4 @@ steps:
 # Publish Quality Gate Result task
 - task: SonarQubePublish@5
   inputs:
-    pollingTimeoutSec: '300
+    pollingTimeoutSec: '300'
