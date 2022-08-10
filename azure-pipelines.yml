@@ -3,11 +3,6 @@ trigger:
 
 pool: 'CR-LAP-JOS-RAM'
   
-  
-variables:
-  buildConfiguration: 'Release'
-  wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
-  dotnetSdkVersion: '5.x'
 
 steps:
 # Prepare Analysis Configuration task
