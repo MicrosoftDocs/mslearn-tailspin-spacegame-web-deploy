@@ -1,8 +1,7 @@
 trigger:
 - '*'
 
-pool:
-  name: 'CR-LAP-JOS-RAM'
+pool: 'CR-LAP-JOS-RAM'
   
   
 variables:
