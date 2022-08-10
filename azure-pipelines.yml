@@ -1,7 +1,7 @@
 trigger:
 - '*'
 
-pool: 'CR-LAP-JOS-RAM'
+pool: 'MyAgentSB'
   
 
 steps:
