@@ -3,7 +3,6 @@ trigger:
 
 pool:
  vmimage: 'ubuntu 20.04'
- name: 'MyAgentpool1'
   demands:
   - npm
 
