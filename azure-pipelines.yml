@@ -7,7 +7,7 @@ variables:
 
 stages:
 - stage: 'Build'
-  displayName: 'Build the web application added to test CI'
+  displayName: 'Build the web application'
   jobs: 
   - job: 'Build'
     displayName: 'Build job'
