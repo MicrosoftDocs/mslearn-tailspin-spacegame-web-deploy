@@ -70,7 +70,7 @@ stages:
   dependsOn: Build
   condition: |
     and(
-      succeed(), 
+      succeeded(), 
       eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
     )
   jobs:
