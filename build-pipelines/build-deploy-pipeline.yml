@@ -3,6 +3,7 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
+  releaseBranchName: 'release'
   
 stages:
 - stage: 'Build'
@@ -64,9 +65,14 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-- stage: 'Deploy'
+- stage: 'Development Deployment'
   displayName: 'Deploy the Web Application'
   dependsOn: Build
+  condition: |
+    and(
+      succeed(), 
+      eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
+    )
   jobs:
   - deployment: Deploy
     pool:
@@ -84,5 +90,5 @@ stages:
             displayName: 'Azure App Service Deploy: $(AzureWebAppName)'
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
-              appName: '$(AzureWebAppName)'
+              appName: '$(AzureWebAppName-Development)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'      
