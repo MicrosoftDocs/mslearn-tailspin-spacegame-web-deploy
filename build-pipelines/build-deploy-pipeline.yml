@@ -1,10 +1,20 @@
+#Every change you push to GitHub triggers the Build stage to run
 trigger:
 - '*'
 
 variables:
   buildConfiguration: 'Release'
   releaseBranchName: 'release'
-  
+
+schedules:
+- cron: '0 3 * * *'
+  displayName: 'Deploy every day at 3 A.M.'
+  branches:
+    include:
+    - release
+  #The always flag is set to false=> the pipeline runs only when the release branch contains changes from the prior run.    
+  always: false
+
 stages:
 - stage: 'Build'
   displayName: 'Build the web application'
@@ -66,7 +76,7 @@ stages:
       artifact: drop
 
 - stage: 'DevelopmentDeployment'
-  displayName: 'Deploy the Web Application'
+  displayName: 'Deploy the Web Application to the Development Environment'
   dependsOn: Build
   condition: |
     and(
@@ -92,3 +102,33 @@ stages:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
               appName: '$(AzureWebAppName-Development)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'      
+
+- stage: 'TestDeployment'
+  displayName: 'Deploy the Web Application to the Testing Environment'
+  dependsOn: Build
+  #The Test stage defines a condition that runs the stage only when the build reason equals Schedule.
+  #If this condition is false, the stage is skipped, but the prior stages continue to run.
+  condition: |
+    and(
+      succeeded(), 
+      eq(variables['Build.Reason'], 'Schedule')
+    )
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: Tests
+    variables:
+    - group: DevelopmentRelease
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: $(AzureWebAppName)'
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              appName: '$(AzureWebAppName-Development)'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
