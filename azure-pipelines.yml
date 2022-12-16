@@ -1,7 +1,7 @@
 trigger:
   - '*'
   
-  variables:
+variables:
     buildConfiguration: 'Release'
     releaseBranchName: 'release'
   
