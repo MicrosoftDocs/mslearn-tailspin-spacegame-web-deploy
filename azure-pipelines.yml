@@ -93,5 +93,5 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
-              appName: '$(WebAppName)'
+              appName: 'AppDeOrueba'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
