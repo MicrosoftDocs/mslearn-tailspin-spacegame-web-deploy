@@ -1,5 +1,7 @@
 trigger:
 - 'dev'
+- 'homol'
+- 'main'
 
 pool:
   vmImage: 'ubuntu-20.04'
