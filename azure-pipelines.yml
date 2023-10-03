@@ -132,7 +132,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
               appType: 'webApp'
               appName: '$(WebAppNameStaging)'
               deployToSlotOrASE: true
@@ -143,10 +143,9 @@ stages:
           - task: AzureAppServiceManage@0
             displayName: Swap Deployment Slots
             inputs:
-              azureSubscription: 
-              ResourceGroupName: SpaceGame2-rg
+              azureSubscription: 'Visual Studio Enterprise Subscription(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+              Action: 'Swap Slots'
               WebAppName: '$(WebAppNameStaging)'
-              SourceSlot: swap
-              TargetSlot: production
-              Action: Swap Slots
+              ResourceGroupName: 'SpaceGame2-rg'
+              SourceSlot: 'swap'
               
