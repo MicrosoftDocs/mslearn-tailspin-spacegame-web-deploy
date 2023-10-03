@@ -131,5 +131,18 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              deployToSlotOrASE: true
+              resourceGroupName: 'SpaceGame2-rg'
+              slotName: 'swap'
               appName: '$(WebAppNameStaging)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+          - task: AzureAppServiceManage@0
+            displayName: Swap Deployment Slots
+            inputs:
+              azureSubscription: 
+              ResourceGroupName: SpaceGame2-rg
+              WebAppName: '$(WebAppNameStaging)'
+              SourceSlot: swap
+              TargetSlot: production
+              Action: Swap Slots
+              
