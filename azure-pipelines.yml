@@ -107,9 +107,11 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'Visual Studio Enterprise Subscription(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+              appType: 'webApp'
               appName: '$(WebAppNameTest)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+              deploymentMethod: 'auto'
 
 - stage: 'Staging'
   displayName: 'Deploy to the staging environment'
