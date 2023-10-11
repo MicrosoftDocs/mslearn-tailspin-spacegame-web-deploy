@@ -148,4 +148,5 @@ stages:
               WebAppName: '$(WebAppNameStaging)'
               ResourceGroupName: 'SpaceGame2-rg'
               SourceSlot: 'swap'
+              SwapWithProduction: false
               
