@@ -1,5 +1,13 @@
+pr:
+  drafts: true
+  branches:
+    include:
+      - main
+      - master
+      - development
+
 trigger:
-- '*'
+- 'quality-assurance'
 
 variables:
   buildConfiguration: 'Release'
