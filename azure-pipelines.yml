@@ -173,12 +173,12 @@ stages:
               deploymentMethod: 'auto'
           
 
-          - task: AzureAppServiceManage@0
-            displayName: Swap Deployment Slots
-            inputs:
-              azureSubscription: 'Visual Studio Enterprise Subscription(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
-              Action: 'Swap Slots'
-              WebAppName: '$(WebAppNameStaging)'
-              ResourceGroupName: 'SpaceGame2-rg'
-              SourceSlot: 'swap'
+#          - task: AzureAppServiceManage@0
+#            displayName: Swap Deployment Slots
+#            inputs:
+#              azureSubscription: 'Visual Studio Enterprise Subscription(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+#              Action: 'Swap Slots'
+#              WebAppName: '$(WebAppNameStaging)'
+#              ResourceGroupName: 'SpaceGame2-rg'
+#              SourceSlot: 'swap'
               
