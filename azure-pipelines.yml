@@ -113,7 +113,7 @@ stages:
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
               deploymentMethod: 'auto'
 
-- stage: 'Test Slot'
+- stage: 'TestSlot'
   displayName: 'Deploy to the test slot'
   dependsOn: Test
   jobs:
