@@ -142,7 +142,7 @@ stages:
               resourceGroupName: 'SpaceGame2-rg'
               slotName: 'test-slot'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
-              deploymentMethod: 'auto'
+              deploymentMethod: 'zipDeploy'
               
 - stage: 'Staging'
   displayName: 'Deploy to the staging environment'
