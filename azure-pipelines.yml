@@ -115,22 +115,22 @@ stages:
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
               deploymentMethod: 'auto'
 
-- stage: 'TestSlot'
-  displayName: 'Deploy to the test slot'
-  dependsOn: Test
-  jobs:
-  - deployment: Deploy
-    pool:
-      vmImage: 'ubuntu-20.04'
-    environment: testslot
-    variables:
-    - group: 'Release'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: drop
+#- stage: 'TestSlot'
+#  displayName: 'Deploy to the test slot'
+#  dependsOn: Test
+#  jobs:
+#  - deployment: Deploy
+#    pool:
+#      vmImage: 'ubuntu-20.04'
+#    environment: testslot
+#    variables:
+#    - group: 'Release'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - download: current
+#            artifact: drop
 
           
               
