@@ -160,17 +160,17 @@ stages:
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
               deploymentMethod: 'auto'
 
-#          - task: AzureWebApp@1
-#            displayName: 'Azure App Service Deploy: Test Slot'
-#            inputs:
-#              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
-#              appType: 'webApp'
-#              appName: '$(WebAppNameStaging)'
-#              deployToSlotOrASE: true
-#              resourceGroupName: 'SpaceGame2-rg'
-#              slotName: 'test-slot'
-#              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
-#              deploymentMethod: 'auto'
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: Test Slot'
+            inputs:
+              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+              appType: 'webApp'
+              appName: '$(WebAppNameStaging)'
+              deployToSlotOrASE: true
+              resourceGroupName: 'SpaceGame2-rg'
+              slotName: 'test-slot'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+              deploymentMethod: 'auto'
 
           - task: AzureAppServiceManage@0
             displayName: Swap Deployment Slots
