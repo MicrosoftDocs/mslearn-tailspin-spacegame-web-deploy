@@ -130,13 +130,13 @@ stages:
           - download: current
             artifact: drop
 
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
-              appType: 'webApp'
-              appName: 'spacegame2-test16120'
-              package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-              deploymentMethod: 'auto'
+#          - task: AzureWebApp@1
+#            inputs:
+#              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+#              appType: 'webApp'
+#              appName: 'spacegame2-test16120'
+#              package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+#              deploymentMethod: 'auto'
 
 - stage: 'Staging'
   displayName: 'Deploy to the staging environment'
@@ -155,7 +155,7 @@ stages:
           - download: current
             artifact: drop
           - task: AzureWebApp@1
-            displayName: 'Azure App Service Deploy: website'
+            displayName: 'Azure App Service Deploy: Swap Slot'
             inputs:
               azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
               appType: 'webApp'
@@ -165,6 +165,19 @@ stages:
               slotName: 'swap'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
               deploymentMethod: 'auto'
+
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: Test Slot'
+            inputs:
+              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+              appType: 'webApp'
+              appName: '$(WebAppNameStaging)'
+              deployToSlotOrASE: true
+              resourceGroupName: 'SpaceGame2-rg'
+              slotName: 'test-slot'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+              deploymentMethod: 'auto'
+
           - task: AzureAppServiceManage@0
             displayName: Swap Deployment Slots
             inputs:
