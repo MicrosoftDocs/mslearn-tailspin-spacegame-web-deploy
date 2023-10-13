@@ -113,6 +113,31 @@ stages:
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
               deploymentMethod: 'auto'
 
+- stage: 'Test-Slot'
+  displayName: 'Deploy to the test slot'
+  dependsOn: Test
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: test-slot
+    variables:
+    - group: 'Release'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Visual Studio Enterprise Subscription(1)(b339a5d1-6a50-4675-b00d-7b4af859bdd9)'
+              appType: 'webApp'
+              appName: 'spacegame2-test16120'
+              package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              deploymentMethod: 'auto'
+
 - stage: 'Staging'
   displayName: 'Deploy to the staging environment'
   dependsOn: Test
