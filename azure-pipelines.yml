@@ -120,7 +120,7 @@ stages:
   - deployment: Deploy
     pool:
       vmImage: 'ubuntu-20.04'
-    environment: test-slot
+    environment: testslot
     variables:
     - group: 'Release'
     strategy:
