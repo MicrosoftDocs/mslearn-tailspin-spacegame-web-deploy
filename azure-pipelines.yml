@@ -1,13 +1,13 @@
 trigger:
   - '*'
   
-  pool:
+pool:
     name: 'Default' # Replace Default with the name of your agent pool if you used a different pool
   
-  variables:
+variables:
     buildConfiguration: 'Release'
   
-  steps:
+steps:
   - task: UseDotNet@2
     displayName: 'Use .NET SDK 6.x'
     inputs:
