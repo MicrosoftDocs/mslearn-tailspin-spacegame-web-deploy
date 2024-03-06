@@ -11,7 +11,7 @@
 <section class="download">
     <div class="image-cap"></div>
     <div class="container">
-        <a href="" class="btn btn-default btn-lg" data-toggle="modal" data-target="#pretend-modal">Download game</a>
+        <a href="" id="download-btn" class="btn btn-default btn-lg" data-toggle="modal" data-target="#pretend-modal">Download game</a>
     </div>
 </section>
 
@@ -19,10 +19,10 @@
 <section class="screens">
     <div class="container">
         <ul>
-            <li><a href="" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
-            <li><a href="" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
-            <li><a href="" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
-            <li><a href="" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
+            <li><a href="" id="screen-01" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
+            <li><a href="" id="screen-02" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
+            <li><a href="" id="screen-03" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
+            <li><a href="" id="screen-04" data-toggle="modal" data-target=".pic-01"><img src="/images/space-game-placeholder.svg" alt=""></a></li>
         </ul>
     </div>
 </section>
@@ -71,7 +71,7 @@
                                     <partial name="Profile" model="new ProfileViewModel { Profile = score.Profile, Rank = (rank - 1).ToString() }" />
                                     <a href="" data-toggle="modal" data-target="#profile-modal-@((rank - 1).ToString())">
                                         <img class="avatar" src="@score.Profile.AvatarUrl" alt="@score.Profile.UserName">
-                                        <div class="score-data username">
+                                        <div class="score-data username" id="profile-@((rank - 1).ToString())">
                                             @score.Profile.UserName
                                         </div>
                                     </a>
@@ -227,7 +227,7 @@
 </div>
 
 <!-- Pic modals -->
-<div class="modal fade pic-01" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade pic-01" id="screen-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header no-border">
