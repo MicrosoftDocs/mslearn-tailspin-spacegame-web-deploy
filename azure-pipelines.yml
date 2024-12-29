@@ -18,27 +18,38 @@ steps:
   inputs:
     version: '$(dotnetSdkVersion)'
 
+# Add a step to ensure the system is prepared for npm/node-gyp
+- powershell: |
+    npm install -g windows-build-tools
+  displayName: 'Install Windows Build Tools'
+
+# Install Node.js dependencies
 - task: Npm@1
   displayName: 'Run npm install'
   inputs:
     verbose: true
 
+# Compile Sass assets
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
   displayName: 'Compile Sass assets'
 
+# Run Gulp tasks
 - task: gulp@1
   displayName: 'Run gulp tasks'
 
+# Write build info
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
   displayName: 'Write build info'
   workingDirectory: $(wwwrootDir)
 
+# Restore project dependencies
 - task: DotNetCoreCLI@2
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
 
+# Build the project
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
@@ -46,6 +57,7 @@ steps:
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
 
+# Publish the project
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
@@ -55,5 +67,6 @@ steps:
     arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
     zipAfterPublish: true
 
+# Publish artifacts
 - publish: '$(Build.ArtifactStagingDirectory)'
   artifact: drop
