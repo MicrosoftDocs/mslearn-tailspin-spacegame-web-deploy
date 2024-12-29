@@ -13,48 +13,59 @@ variables:
   dotnetSdkVersion: '8.x'
 
 steps:
+# Step 1: Use the required .NET SDK
 - task: UseDotNet@2
   displayName: 'Use .NET SDK $(dotnetSdkVersion)'
   inputs:
     version: '$(dotnetSdkVersion)'
 
+# Step 2: Use a compatible Node.js version
 - task: UseNode@1
   displayName: 'Use Node.js 18.x'
   inputs:
     version: '18.x'
 
-# Set required environment variables for node-gyp
+# Step 3: Set environment variables for node-gyp
 - powershell: |
-    $env:GYP_MSVS_VERSION = '2019'
-  displayName: 'Set GYP_MSVS_VERSION for node-gyp'
+    $env:GYP_MSVS_VERSION = '2019' # Required for node-gyp to locate Visual Studio Build Tools
+  displayName: 'Set Environment Variables for Node.js and npm'
 
+# Step 4: Install npm dependencies with improved settings
 - script: |
-    npm install --verbose
+    npm install --verbose --no-optional
   displayName: 'Run npm install'
 
+# Step 5: Compile Sass assets
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
   displayName: 'Compile Sass assets'
 
+# Step 6: Run Gulp tasks
 - task: gulp@1
   displayName: 'Run gulp tasks'
 
-- script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
+# Step 7: Write build information to a file
+- script: |
+    echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt
   displayName: 'Write build info'
   workingDirectory: $(wwwrootDir)
 
+# Step 8: Restore project dependencies
 - task: DotNetCoreCLI@2
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
 
+# Step 9: Build the project
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
-    arguments: '--no-restore --configuration $(buildConfiguration)'
+    arguments: '--no-restore
+    --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
 
+# Step 10: Publish the project
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
@@ -64,5 +75,6 @@ steps:
     arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
     zipAfterPublish: true
 
+# Step 11: Publish build artifacts
 - publish: '$(Build.ArtifactStagingDirectory)'
   artifact: drop
