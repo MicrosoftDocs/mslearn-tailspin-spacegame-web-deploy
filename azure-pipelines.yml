@@ -23,17 +23,16 @@ steps:
   inputs:
     version: '18.x'
 
-- task: UsePythonVersion@0
-  displayName: 'Use Python 3.x'
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+# Set required environment variables for node-gyp
+- powershell: |
+    $env:GYP_MSVS_VERSION = '2019'
+  displayName: 'Set GYP_MSVS_VERSION for node-gyp'
 
 - script: |
-    npm install --unsafe-perm=true --force
+    npm install --verbose
   displayName: 'Run npm install'
 
-- script: './node_modules/.bin/sass $(wwwrootDir):$(wwwrootDir)'
+- script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
