@@ -2,9 +2,10 @@ trigger:
 - '*'
 
 pool:
-  vmImage: 'ubuntu-20.04'
+  name: 'Default'    
   demands:
-  - npm
+    - npm
+    - agent.name -equals AMANCINI
 
 variables:
   buildConfiguration: 'Release'
