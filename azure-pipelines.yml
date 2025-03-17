@@ -3,7 +3,6 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  dotnetSdkVersion: '5.x'
 
 stages:
 - stage: 'Build'
