@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - "*"
+      - "release"
 
 
 variables:
@@ -70,30 +70,30 @@ stages:
       artifact: drop
 
 - stage: 'Dev'
-displayName: 'Deploy to the dev environment'
-dependsOn: Build
-condition: |
-  and
-  (
-    succeeded(),
-    eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
-  )
-jobs:
-- deployment: Deploy
-  pool:
-    vmImage: 'ubuntu-20.04'
-  environment: dev
-  variables:
-  - group: Release1
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - download: current
-          artifact: drop
-        - task: AzureWebApp@1
-          displayName: 'Azure App Service Deploy: website'
-          inputs:
-            azureSubscription: 'cor-sandbox-espinalg-001'
-            appName: '$(WebAppNameDev)'
-            package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+  displayName: 'Deploy to the dev environment'
+  dependsOn: Build
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
+    )
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: dev
+    variables:
+    - group: Release1
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: WebAppNameDev'
+            inputs:
+              azureSubscription: 'cor-sandbox-espinalg-001'
+              appName: '$(WebAppNameDev)'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
