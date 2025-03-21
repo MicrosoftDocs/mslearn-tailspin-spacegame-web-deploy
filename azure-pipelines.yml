@@ -8,14 +8,6 @@ variables:
   buildConfiguration: 'Release1'
   releaseBranchName: 'release'
 
-schedules:
-- cron: '0 3 * * *'
-  displayName: 'Deploy every day at 3 A.M.'
-  branches:
-    include:
-    - release
-  always: false
-
 stages:
 - stage: 'Build'
   displayName: 'Build the web application'
