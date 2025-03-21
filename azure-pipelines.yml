@@ -1,5 +1,8 @@
 trigger:
-- 'release'
+  branches:
+    include:
+      - "*"
+
 
 variables:
   buildConfiguration: 'Release1'
