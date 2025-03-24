@@ -127,7 +127,7 @@ stages:
     dependsOn: Deploy
     displayName: 'Run UI tests'
     pool:
-      vmImage: 'ubuntu-20.04'
+      vmImage: 'windows-2019'
     variables:
     - group: 'Release1'
     steps: 
