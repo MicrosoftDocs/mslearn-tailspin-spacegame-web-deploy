@@ -129,7 +129,7 @@ stages:
     pool:
       vmImage: 'windows-2019'
     variables:
-    - group: 'Release'
+    - group: 'Release1'
     steps: 
     - task: UseDotNet@2
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
@@ -158,7 +158,7 @@ stages:
       vmImage: 'ubuntu-20.04'
     environment: staging
     variables:
-    - group: 'Release'
+    - group: 'Release1'
     strategy:
       runOnce:
         deploy:
