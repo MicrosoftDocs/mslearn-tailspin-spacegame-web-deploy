@@ -62,7 +62,7 @@ stages:
       displayName: 'Publish the project - $(buildConfiguration)'
       inputs:
         command: 'publish'
-        projects: '$(System.DefaultWorkingDirectory/**/Tailspin.SpaceGame.Web.csproj' 
+        projects: '$(System.DefaultWorkingDirectory)/Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj' 
         publishWebProjects: false
         arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
         zipAfterPublish: true
