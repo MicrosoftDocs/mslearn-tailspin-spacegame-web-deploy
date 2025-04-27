@@ -18,7 +18,7 @@ steps:
 - checkout: self
   fetchDepth: 0
 
-- task: SonarCloudPrepare@1
+- task: SonarCloudPrepare@3
   displayName: 'Preparing SonarCloud analysis configuration'
   inputs:
     SonarCloud: 'SonarQube Cloud Service'
