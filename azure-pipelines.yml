@@ -39,6 +39,14 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud Code Analysis'
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish Quality Gate Result'
+  inputs:
+    pollingTimeoutSec: '300' # Optional: Adjust the timeout as needed
+
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
