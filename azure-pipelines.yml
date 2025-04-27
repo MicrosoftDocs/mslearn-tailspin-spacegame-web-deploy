@@ -18,6 +18,15 @@ steps:
 - checkout: self
   fetchDepth: 0
 
+- task: SonarCloudPrepare@1
+  displayName: 'Preparing SonarCloud analysis configuration'
+  inputs:
+    organization: 'bernikov'
+    projectKey: 'bernikov_Space-Game---web---Release-workflow'
+    projectName: 'Space Game - web - Release workflow'
+
+
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
