@@ -21,6 +21,7 @@ steps:
 - task: SonarCloudPrepare@1
   displayName: 'Preparing SonarCloud analysis configuration'
   inputs:
+    SonarCloud: 'SonarQube Cloud Service'
     organization: 'bernikov'
     projectKey: 'bernikov_Space-Game---web---Release-workflow'
     projectName: 'Space Game - web - Release workflow'
